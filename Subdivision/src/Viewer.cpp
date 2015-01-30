@@ -10,6 +10,7 @@ using namespace std;
 #include "Viewer.h"
 #include "Image.h"
 #include "Application.h"
+#include "Subdivision.h"
 
 namespace DDG
 {
@@ -210,7 +211,7 @@ namespace DDG
 
    void Viewer :: mProcess( void )
    {
-      // TODO: call Application here!
+      Subdivision::build(mesh, mesh);
       updateDisplayList();
    }
    

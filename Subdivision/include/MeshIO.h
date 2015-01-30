@@ -18,12 +18,35 @@
 #include <sstream>
 #include <vector>
 
+#include "Vector.h"
+
 namespace DDG
 {
    class Mesh;
-   class Index;
-   class MeshData;
 
+   class Index
+   {
+      public:
+         Index( void );
+   
+         Index( int p, int t, int n );
+   
+         bool operator<( const Index& i ) const;
+   
+         int position;
+         int texcoord;
+         int normal;
+   };
+   
+   class MeshData
+   {
+      public:
+         std::vector<Vector> positions;
+         std::vector<Vector> texcoords;
+         std::vector<Vector> normals;
+         std::vector< std::vector< Index > > indices;
+   };
+   
    class MeshIO
    {
       public:
@@ -33,6 +56,8 @@ namespace DDG
          static void write( std::ostream& out, const Mesh& mesh );
          // writes a mesh to a valid, open output stream out
 
+         static  int buildMesh( const MeshData& data, Mesh& mesh );
+
       protected:
          static  int readMeshData( std::istream& in, MeshData& data );
          static void readPosition( std::stringstream& ss, MeshData& data );
@@ -41,7 +66,6 @@ namespace DDG
          static void readFace    ( std::stringstream& ss, MeshData& data );
          static Index parseFaceIndex( const std::string& token );
          static void preallocateMeshElements( const MeshData& data, Mesh& mesh );
-         static  int buildMesh( const MeshData& data, Mesh& mesh );
          static void checkIsolatedVertices( const Mesh& Mesh );
          static void checkNonManifoldVertices( const Mesh& Mesh );
    };

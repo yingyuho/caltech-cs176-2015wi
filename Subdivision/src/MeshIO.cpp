@@ -10,41 +10,24 @@ using namespace std;
 
 namespace DDG
 {
-   class Index
+   Index :: Index( void )
+   {}
+
+   Index :: Index( int p, int t, int n )
+   : position( p ), texcoord( t ), normal( n )
+   {}
+
+   bool Index :: operator<( const Index& i ) const
    {
-      public:
-         Index( void )
-         {}
-   
-         Index( int p, int t, int n )
-         : position( p ), texcoord( t ), normal( n )
-         {}
-   
-         bool operator<( const Index& i ) const
-         {
-            if( position < i.position ) return true;
-            if( position > i.position ) return false;
-            if( texcoord < i.texcoord ) return true;
-            if( texcoord > i.texcoord ) return false;
-            if(   normal < i.normal   ) return true;
-            if(   normal > i.normal   ) return false;
-            return false;
-         }
-   
-         int position;
-         int texcoord;
-         int normal;
-   };
-   
-   class MeshData
-   {
-      public:
-         std::vector<Vector> positions;
-         std::vector<Vector> texcoords;
-         std::vector<Vector> normals;
-         std::vector< std::vector< Index > > indices;
-   };
-   
+      if( position < i.position ) return true;
+      if( position > i.position ) return false;
+      if( texcoord < i.texcoord ) return true;
+      if( texcoord > i.texcoord ) return false;
+      if(   normal < i.normal   ) return true;
+      if(   normal > i.normal   ) return false;
+      return false;
+   }
+
    int MeshIO :: read( istream& in, Mesh& mesh )
    // reads a mesh from a valid, open input stream in
    {
