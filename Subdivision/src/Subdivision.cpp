@@ -47,7 +47,6 @@ namespace DDG
       ctlpts.resize(sizeF + sizeE + sizeV);
 
       vector<int> degreesF(sizeF, 0);
-      // vector<int> degreesV2(sizeV, 0);
       vector<int> degreesV(sizeV, 0);      
 
       Vector
@@ -93,7 +92,6 @@ namespace DDG
             {
                ctlptsE[idxE] += ctlptsF[idxF];
                ctlptsV[idxV] += ctlptsF[idxF] + he2->vertex->position;
-               // degreesV2[idxV] += 2;
             }
             else
             {
@@ -113,7 +111,7 @@ namespace DDG
       {
          if( !he->onBoundary )
          {
-            // compute averaged edge points
+            // compute edge points
             unsigned int idxE = he->edge - meshE.begin();
             ctlptsE[idxE] /= 2;
          }
@@ -129,7 +127,7 @@ namespace DDG
          }
       }
 
-
+      // compute even (vertex) points
       for( unsigned int idxV = 0; idxV < sizeV; idxV++ )
       {
          const int k = degreesV[idxV];
@@ -140,47 +138,28 @@ namespace DDG
          }
       }
 
-      // cout << "V" << endl;
-
-      // for( unsigned int i = 0; i < sizeV; i++ )
-      // {
-      //    cout << ctlptsV[i] << " " << degreesV[i] << endl;
-      // }
-
-      // cout << "E" << endl;
-
-      // for( unsigned int i = 0; i < sizeE; i++ )
-      // {
-      //    cout << ctlptsE[i] << endl;
-      // }
-
-      // cout << "F" << endl;
-
-      // for( unsigned int i = 0; i < sizeF; i++ )
-      // {
-      //    cout << ctlptsF[i] << " " << degreesF[i] << endl;
-      // }
-
+      // make k new faces for each k-gons in old mesh
       for( unsigned int i = 0; i < sizeF; i++ )
       {
          HalfEdgeIter he = meshF[i].he, he1 = he;
          do
          {
             data.indices.push_back(vector<Index>());
+            // face point
             data.indices.back().push_back(
                Index(i, -1, -1));
+            // edge point
             data.indices.back().push_back(
                Index(sizeF + he->edge - meshE0, -1, -1));
             he = he->next;
+            // even (vertex) point
             data.indices.back().push_back(
                Index(sizeF + sizeE + he->vertex - meshV0, -1, -1));
+            // edge point
             data.indices.back().push_back(
                Index(sizeF + he->edge - meshE0, -1, -1));
          }
          while( he != he1 );
-         // for ( unsigned int j = 0; j < data.indices[i].size(); j ++ )
-         //    cout << data.indices[i][j].position << " ";
-         // cout << endl;
       }
 
       MeshIO::buildMesh(data, dest);
